@@ -1,0 +1,50 @@
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    command: >-
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow_store:/mlflow
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health', timeout=2)"]
+      interval: 20s
+      timeout: 4s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      SAFEGUARD_MODEL_PATH: /app/models/best.onnx
+      SAFEGUARD_CONFIDENCE: "0.25"
+      SAFEGUARD_IOU: "0.45"
+      SAFEGUARD_CORS_ORIGINS: http://localhost:3000,http://localhost:5173
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"]
+      interval: 20s
+      timeout: 4s
+      retries: 5
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8000
+        VITE_WEBCAM_INTERVAL_MS: "300"
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy

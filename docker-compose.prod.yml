@@ -1,0 +1,17 @@
+services:
+  backend:
+    image: ghcr.io/${GITHUB_OWNER:-amin8382}/safeguard-backend:latest
+    environment:
+      SAFEGUARD_MODEL_PATH: /app/models/best.onnx
+      SAFEGUARD_CORS_ORIGINS: http://localhost:3000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models:ro
+
+  frontend:
+    image: ghcr.io/${GITHUB_OWNER:-amin8382}/safeguard-frontend:latest
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
