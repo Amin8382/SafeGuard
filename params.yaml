@@ -1,0 +1,30 @@
+project:
+  name: SafeGuard
+  task: real_time_ppe_detection
+
+data:
+  config: configs/datasets.yaml
+  lock: configs/dataset_lock.yaml
+  output_dir: data/processed
+  deduplicate: true
+
+train:
+  model: yolo11n.pt
+  run_name: yolo11n-merged-baseline
+  epochs: 50
+  imgsz: 640
+  batch: 16
+  device: 0
+  workers: 4
+  patience: 15
+  seed: 42
+  deterministic: true
+
+inference:
+  confidence: 0.25
+  iou: 0.45
+  max_detections: 100
+  webcam_interval_ms: 300
+
+mlflow:
+  tracking_uri: http://localhost:5000

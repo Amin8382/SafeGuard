@@ -1,0 +1,33 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+.ruff_cache/
+
+# ML / experiment outputs
+mlruns/
+mlflow_store/
+runs/
+models/*.pt
+models/*.onnx
+!models/.gitkeep
+metrics.json
+reports/*.json
+reports/*.csv
+!reports/.gitkeep
+
+# Data is versioned by DVC, not Git
+data/raw/*
+!data/raw/roboflow/.gitkeep
+!data/raw/ultralytics/.gitkeep
+data/interim/
+data/processed/
+*.dvc.tmp
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Local smoke-test state
+.smoke_data/

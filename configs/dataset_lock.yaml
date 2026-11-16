@@ -1,0 +1,60 @@
+project: SafeGuard
+canonical_classes:
+  - person
+  - helmet
+  - vest
+  - gloves
+  - no_helmet
+
+sources:
+  roboflow:
+    display_name: Roboflow Construction Site Safety
+    selected_release:
+      version: 30
+      label: raw-images_latestversion
+      expected_images: 717
+    expected_project_images: 717
+    expected_license: CC BY 4.0
+    source_url: https://universe.roboflow.com/roboflow-universe-projects/construction-site-safety/dataset/30
+    accepted_class_names:
+      person: [Person]
+      helmet: [Hardhat]
+      vest: [Safety Vest]
+      gloves: [Gloves]
+      no_helmet: [NO-Hardhat]
+
+  ultralytics:
+    display_name: Ultralytics Construction-PPE
+    selected_release:
+      label: legacy-2025-v1
+      expected_images: 1416
+      expected_classes: 11
+      expected_splits:
+        train: 1132
+        val: 143
+        test: 141
+      expected_class_names:
+        - helmet
+        - gloves
+        - vest
+        - boots
+        - goggles
+        - none
+        - Person
+        - no_helmet
+        - no_goggle
+        - no_gloves
+        - no_boots
+    source_url: https://docs.ultralytics.com/datasets/detect/construction-ppe
+    compatibility_note: >-
+      The public Ultralytics Construction-PPE archive changed in November 2026 to a
+      1000-image / 12-class release. SafeGuard is locked to the earlier 1416-image /
+      11-class release selected for this project. Class mapping is name-based, but a
+      release change must be deliberate and documented rather than silent.
+
+split_policy:
+  strategy: deterministic_hash
+  train_pct: 80
+  val_pct: 10
+  test_pct: 10
+  seed_namespace: safeguard-v1

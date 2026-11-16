@@ -1,0 +1,24 @@
+canonical_classes:
+  0: person
+  1: helmet
+  2: vest
+  3: gloves
+  4: no_helmet
+
+sources:
+  roboflow:
+    root: data/raw/roboflow
+    class_map:
+      Person: person
+      Hardhat: helmet
+      Safety Vest: vest
+      Gloves: gloves
+      NO-Hardhat: no_helmet
+  ultralytics:
+    root: data/raw/ultralytics
+    class_map:
+      Person: person
+      helmet: helmet
+      vest: vest
+      gloves: gloves
+      no_helmet: no_helmet
