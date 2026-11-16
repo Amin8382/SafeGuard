@@ -1,0 +1,102 @@
+stages:
+  audit_sources:
+    cmd: python -m src.data.audit --config configs/datasets.yaml --lock configs/dataset_lock.yaml --output reports/source_audit.json --strict
+    deps:
+      - src/data/audit.py
+      - src/data/common.py
+      - configs/datasets.yaml
+      - configs/dataset_lock.yaml
+      - data/raw/roboflow
+      - data/raw/ultralytics
+    outs:
+      - reports/source_audit.json:
+          cache: false
+
+  harmonize:
+    cmd: python -m src.data.harmonize --config configs/datasets.yaml --output data/interim
+    deps:
+      - src/data/harmonize.py
+      - src/data/common.py
+      - configs/datasets.yaml
+      - reports/source_audit.json
+      - data/raw/roboflow
+      - data/raw/ultralytics
+    outs:
+      - data/interim
+
+  merge:
+    cmd: python -m src.data.merge --input data/interim --output data/processed --config configs/datasets.yaml --lock configs/dataset_lock.yaml
+    deps:
+      - src/data/merge.py
+      - data/interim
+      - configs/datasets.yaml
+      - configs/dataset_lock.yaml
+    outs:
+      - data/processed
+
+  near_duplicates:
+    cmd: python -m src.data.near_duplicates --root data/processed --threshold 4 --output reports/near_duplicates.json
+    deps:
+      - src/data/near_duplicates.py
+      - data/processed
+    outs:
+      - reports/near_duplicates.json:
+          cache: false
+
+  data_report:
+    cmd: python -m src.data.report
+    deps:
+      - src/data/report.py
+      - reports/source_audit.json
+      - data/interim/harmonization_report.json
+      - data/processed/build_report.json
+      - reports/near_duplicates.json
+    outs:
+      - reports/DATA_QUALITY_REPORT.md:
+          cache: false
+
+  train_matrix:
+    cmd: python -m src.training.run_matrix --matrix configs/experiments.yaml
+    deps:
+      - src/training/train.py
+      - src/training/run_matrix.py
+      - src/training/utils.py
+      - configs/experiments.yaml
+      - params.yaml
+      - data/processed
+    params:
+      - train
+    outs:
+      - models/best.pt
+    metrics:
+      - reports/experiment_summary.json:
+          cache: false
+
+  final_evaluate:
+    cmd: python -m src.training.evaluate --weights models/best.pt --data data/processed/safeguard.yaml --output reports/final_test_metrics.json
+    deps:
+      - src/training/evaluate.py
+      - models/best.pt
+      - data/processed/safeguard.yaml
+    metrics:
+      - reports/final_test_metrics.json:
+          cache: false
+
+  export_onnx:
+    cmd: python -m src.training.export_onnx --weights models/best.pt --imgsz 640 --output models/best.onnx
+    deps:
+      - src/training/export_onnx.py
+      - models/best.pt
+    outs:
+      - models/best.onnx
+
+  benchmark:
+    cmd: python -m src.training.benchmark --data data/processed/safeguard.yaml --pt models/best.pt --onnx models/best.onnx --output reports/benchmark.json
+    deps:
+      - src/training/benchmark.py
+      - models/best.pt
+      - models/best.onnx
+      - data/processed/safeguard.yaml
+    metrics:
+      - reports/benchmark.json:
+          cache: false
