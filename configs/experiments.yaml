@@ -1,0 +1,41 @@
+experiment_name: SafeGuard
+selection_metric: val/metrics/mAP50-95(B)
+selection_tiebreaker: val/speed_inference_ms
+target_inference_ms: 50.0
+experiments:
+  - name: yolo11n-roboflow-baseline
+    dataset: roboflow
+    train:
+      model: yolo11n.pt
+      epochs: 50
+      imgsz: 640
+  - name: yolo11n-ultralytics-baseline
+    dataset: ultralytics
+    train:
+      model: yolo11n.pt
+      epochs: 50
+      imgsz: 640
+  - name: yolo11n-merged-baseline
+    dataset: merged
+    train:
+      model: yolo11n.pt
+      epochs: 50
+      imgsz: 640
+  - name: yolo11s-merged
+    dataset: merged
+    train:
+      model: yolo11s.pt
+      epochs: 60
+      imgsz: 640
+  - name: yolo11n-merged-768
+    dataset: merged
+    train:
+      model: yolo11n.pt
+      epochs: 60
+      imgsz: 768
+      augmentation:
+        degrees: 5.0
+        translate: 0.10
+        scale: 0.40
+        fliplr: 0.50
+        mosaic: 0.80
