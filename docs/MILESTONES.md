@@ -25,7 +25,7 @@ Acceptance:
 Implemented:
 - source YAML discovery;
 - class-name-based mapping;
-- canonical classes: `person`, `helmet`, `vest`, `gloves`, `no_helmet`;
+- canonical classes: `person`, `helmet`, `vest`, `no_helmet`;
 - source-only annotation filtering;
 - source audit against `dataset_lock.yaml`;
 - DVC dependency graph.

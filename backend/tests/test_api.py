@@ -20,7 +20,7 @@ def test_health():
 def test_classes_are_intersection_only():
     response = client.get('/classes')
     assert response.status_code == 200
-    assert response.json()['classes'] == ['person', 'helmet', 'vest', 'gloves', 'no_helmet']
+    assert response.json()['classes'] == ['person', 'helmet', 'vest', 'no_helmet']
 
 
 def test_model_info_exposes_thresholds():

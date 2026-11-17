@@ -78,7 +78,22 @@ def split_image_dirs(base: Path, meta: dict) -> Dict[str, Path]:
             raise ValueError(f'Multiple image roots for {target} are not supported in V1.')
         p = Path(value)
         if not p.is_absolute():
-            p = (base / p).resolve()
+            primary = (base / p).resolve()
+            if primary.exists():
+                p = primary
+            else:
+                # Roboflow YOLO exports sometimes write paths such as
+                # `../train/images` even though `data.yaml` sits beside the
+                # `train/`, `valid/`, and `test/` folders. In that packaged
+                # layout, interpreting `..` literally walks outside the
+                # dataset root and produces an empty audit. Fall back to the
+                # same relative path with only leading `.` / `..` components
+                # removed, but only when that candidate actually exists.
+                parts = list(p.parts)
+                while parts and parts[0] in {'.', '..'}:
+                    parts.pop(0)
+                fallback = (base / Path(*parts)).resolve() if parts else primary
+                p = fallback if fallback.exists() else primary
         result[target] = p
     return result
 

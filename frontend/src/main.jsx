@@ -8,7 +8,6 @@ const CLASS_COLOR = {
   person: '#60a5fa',
   helmet: '#34d399',
   vest: '#fbbf24',
-  gloves: '#a78bfa',
   no_helmet: '#fb7185',
 };
 
@@ -74,7 +73,6 @@ function Summary({ result }) {
         <Metric label="People" value={counts.person || 0} />
         <Metric label="Helmets" value={counts.helmet || 0} />
         <Metric label="Vests" value={counts.vest || 0} />
-        <Metric label="Gloves" value={counts.gloves || 0} />
         <Metric label="No helmet" value={counts.no_helmet || 0} danger={violation} />
         <Metric label="Latency" value={`${result.latency_ms ?? '-'} ms`} />
         <Metric label="Inference FPS" value={result.inference_fps ?? '-'} />
@@ -291,7 +289,7 @@ function App() {
       </section>
 
       <section className="facts">
-        <Metric label="Canonical classes" value="5" />
+        <Metric label="Canonical classes" value="4" />
         <Metric label="Deployment" value="ONNX Runtime" />
         <Metric label="Modes" value="Image + webcam" />
       </section>
@@ -304,7 +302,7 @@ function App() {
       {mode === 'image' ? <ImageMode /> : <WebcamMode />}
 
       <footer className="footer">
-        SafeGuard reports explicit labels learned from the datasets. It does not infer missing vest/gloves unless those missing classes are part of the canonical ontology.
+        SafeGuard reports explicit labels learned from the datasets. It does not infer missing vest or other PPE unless explicit missing-PPE classes are part of the canonical ontology.
       </footer>
     </main>
   );

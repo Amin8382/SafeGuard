@@ -106,22 +106,27 @@ def audit_dataset(source: str, root: Path) -> dict:
 
 def compare_with_lock(report: dict, source_cfg: dict) -> dict:
     checks = []
-    if report['source'] == 'ultralytics' and source_cfg.get('selected_release'):
-        rel = source_cfg['selected_release']
-        expected_images = rel.get('expected_images')
-        expected_classes = rel.get('expected_classes')
+    rel = source_cfg.get('selected_release', {})
+
+    expected_images = rel.get('expected_images', source_cfg.get('expected_project_images'))
+    if expected_images is not None:
         checks.append({
             'name': 'image_count',
             'expected': expected_images,
             'actual': report['images_total'],
             'ok': expected_images == report['images_total'],
         })
+
+    expected_classes = rel.get('expected_classes')
+    if expected_classes is not None:
         checks.append({
             'name': 'class_count',
             'expected': expected_classes,
             'actual': report['class_count'],
             'ok': expected_classes == report['class_count'],
         })
+
+    if 'expected_class_names' in rel:
         expected_names = set(rel.get('expected_class_names', []))
         actual_names = set(report['classes'])
         checks.append({
@@ -130,22 +135,16 @@ def compare_with_lock(report: dict, source_cfg: dict) -> dict:
             'actual': sorted(actual_names),
             'ok': expected_names == actual_names,
         })
-        for split_name, expected_count in rel.get('expected_splits', {}).items():
-            actual_count = report.get('splits', {}).get(split_name, {}).get('images', 0)
-            checks.append({
-                'name': f'split_{split_name}_images',
-                'expected': expected_count,
-                'actual': actual_count,
-                'ok': expected_count == actual_count,
-            })
-    elif report['source'] == 'roboflow':
-        expected_images = source_cfg.get('expected_project_images')
+
+    for split_name, expected_count in rel.get('expected_splits', {}).items():
+        actual_count = report.get('splits', {}).get(split_name, {}).get('images', 0)
         checks.append({
-            'name': 'image_count',
-            'expected': expected_images,
-            'actual': report['images_total'],
-            'ok': expected_images == report['images_total'],
+            'name': f'split_{split_name}_images',
+            'expected': expected_count,
+            'actual': actual_count,
+            'ok': expected_count == actual_count,
         })
+
     return {'checks': checks, 'all_ok': all(c['ok'] for c in checks) if checks else True}
 
 

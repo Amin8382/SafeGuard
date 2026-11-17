@@ -31,3 +31,5 @@ frontend/dist/
 
 # Local smoke-test state
 .smoke_data/
+
+.venv311/

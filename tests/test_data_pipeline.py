@@ -28,7 +28,7 @@ def test_deduplicate_keeps_one_exact_image(tmp_path: Path):
 
 
 def test_write_dataset_emits_provenance_and_yaml(tmp_path: Path):
-    canonical = {0: 'person', 1: 'helmet', 2: 'vest', 3: 'gloves', 4: 'no_helmet'}
+    canonical = {0: 'person', 1: 'helmet', 2: 'vest', 3: 'no_helmet'}
     records = []
     from src.data.merge import sha256
     for i in range(6):
@@ -68,3 +68,55 @@ def test_dataset_yaml_path_fallback_when_packaged_path_is_stale(tmp_path: Path):
     assert base == root.resolve()
     assert names == ['helmet', 'Person']
     assert split_image_dirs(base, parsed)['train'] == (root / 'images' / 'train').resolve()
+
+
+def test_compare_with_lock_validates_generic_release_metadata():
+    from src.data.audit import compare_with_lock
+
+    report = {
+        'source': 'roboflow',
+        'images_total': 2799,
+        'class_count': 10,
+        'classes': [
+            'Hardhat', 'Mask', 'NO-Hardhat', 'NO-Mask', 'NO-Safety Vest',
+            'Person', 'Safety Cone', 'Safety Vest', 'machinery', 'vehicle'
+        ],
+        'splits': {
+            'train': {'images': 2603},
+            'val': {'images': 114},
+            'test': {'images': 82},
+        },
+    }
+    lock = {
+        'selected_release': {
+            'expected_images': 2799,
+            'expected_classes': 10,
+            'expected_class_names': report['classes'],
+            'expected_splits': {'train': 2603, 'val': 114, 'test': 82},
+        }
+    }
+
+    result = compare_with_lock(report, lock)
+
+    assert result['all_ok'] is True
+    assert all(check['ok'] for check in result['checks'])
+
+
+def test_roboflow_parent_prefixed_split_paths_resolve_inside_dataset(tmp_path):
+    from src.data.common import resolve_dataset, split_image_dirs
+
+    root = tmp_path / 'roboflow'
+    (root / 'train' / 'images').mkdir(parents=True)
+    (root / 'valid' / 'images').mkdir(parents=True)
+    (root / 'test' / 'images').mkdir(parents=True)
+    (root / 'data.yaml').write_text(
+        "train: ../train/images\nval: ../valid/images\ntest: ../test/images\nnc: 1\nnames: ['Person']\n",
+        encoding='utf-8',
+    )
+
+    base, parsed, _ = resolve_dataset(root)
+    splits = split_image_dirs(base, parsed)
+
+    assert splits['train'] == (root / 'train' / 'images').resolve()
+    assert splits['val'] == (root / 'valid' / 'images').resolve()
+    assert splits['test'] == (root / 'test' / 'images').resolve()

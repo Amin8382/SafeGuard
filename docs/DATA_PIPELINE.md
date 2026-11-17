@@ -11,7 +11,6 @@ Roboflow                     Ultralytics                 Canonical
 Person                       Person                      person
 Hardhat                      helmet                      helmet
 Safety Vest                  vest                        vest
-Gloves                       gloves                     gloves
 NO-Hardhat                   no_helmet                   no_helmet
 ```
 

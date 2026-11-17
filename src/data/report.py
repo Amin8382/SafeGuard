@@ -30,7 +30,7 @@ def main():
         "",
         "## Canonical intersection ontology",
         "",
-        "`person`, `helmet`, `vest`, `gloves`, `no_helmet`",
+        "`person`, `helmet`, `vest`, `no_helmet`",
         "",
         "## Source audit",
         "",

@@ -63,7 +63,7 @@ def download_roboflow(dest: Path, version: int, fmt: str):
     api_key = os.getenv("ROBOFLOW_API_KEY")
     if not api_key:
         raise RuntimeError(
-            "ROBOFLOW_API_KEY is not set. Export Construction Site Safety v30 in YOLOv11 format "
+            "ROBOFLOW_API_KEY is not set. Export Construction Site Safety v27 in YOLOv8 format "
             "into data/raw/roboflow, or set the key and rerun."
         )
     try:
@@ -83,8 +83,8 @@ def download_roboflow(dest: Path, version: int, fmt: str):
 def main():
     parser = argparse.ArgumentParser(description="Install the two locked SafeGuard source datasets.")
     parser.add_argument("--source", choices=["all", "roboflow", "ultralytics"], default="all")
-    parser.add_argument("--roboflow-version", type=int, default=30)
-    parser.add_argument("--roboflow-format", default="yolov11")
+    parser.add_argument("--roboflow-version", type=int, default=27)
+    parser.add_argument("--roboflow-format", default="yolov8")
     parser.add_argument("--ultralytics-zip", type=Path)
     parser.add_argument("--accept-current-ultralytics", action="store_true")
     args = parser.parse_args()

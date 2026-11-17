@@ -20,7 +20,7 @@ data/raw/
 
 ### Roboflow
 
-SafeGuard is configured for the **Construction Site Safety** project, version 30 (`raw-images_latestversion`), 717 images, exported in YOLO format. The harmonizer keeps only the five shared semantic labels.
+SafeGuard is configured for **Construction Site Safety v27** using the actual YOLOv8 export selected for the project: 2,799 images (2,603 train / 114 validation / 82 test). The Roboflow page historically reports 2,801 images, so the two-image export discrepancy is recorded in `configs/dataset_lock.yaml`. The harmonizer keeps only the four labels shared with the legacy Construction-PPE source: `person`, `helmet`, `vest`, and `no_helmet`.
 
 ### Ultralytics
 

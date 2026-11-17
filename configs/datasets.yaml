@@ -2,8 +2,7 @@ canonical_classes:
   0: person
   1: helmet
   2: vest
-  3: gloves
-  4: no_helmet
+  3: no_helmet
 
 sources:
   roboflow:
@@ -12,7 +11,6 @@ sources:
       Person: person
       Hardhat: helmet
       Safety Vest: vest
-      Gloves: gloves
       NO-Hardhat: no_helmet
   ultralytics:
     root: data/raw/ultralytics
@@ -20,5 +18,4 @@ sources:
       Person: person
       helmet: helmet
       vest: vest
-      gloves: gloves
       no_helmet: no_helmet

@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-CANONICAL_CLASSES = ["person", "helmet", "vest", "gloves", "no_helmet"]
+CANONICAL_CLASSES = ["person", "helmet", "vest", "no_helmet"]
 MODEL_PATH = Path(os.getenv("SAFEGUARD_MODEL_PATH", str(PROJECT_ROOT / "models" / "best.onnx")))
 CONFIDENCE = float(os.getenv("SAFEGUARD_CONFIDENCE", "0.25"))
 IOU = float(os.getenv("SAFEGUARD_IOU", "0.45"))

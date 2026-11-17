@@ -3,30 +3,49 @@ canonical_classes:
   - person
   - helmet
   - vest
-  - gloves
   - no_helmet
 
 sources:
   roboflow:
     display_name: Roboflow Construction Site Safety
     selected_release:
-      version: 30
-      label: raw-images_latestversion
-      expected_images: 717
-    expected_project_images: 717
+      version: 27
+      label: construction-site-safety-v27-yolov8-export
+      expected_images: 2799
+      expected_classes: 10
+      expected_splits:
+        train: 2603
+        val: 114
+        test: 82
+      expected_class_names:
+        - Hardhat
+        - Mask
+        - NO-Hardhat
+        - NO-Mask
+        - NO-Safety Vest
+        - Person
+        - Safety Cone
+        - Safety Vest
+        - machinery
+        - vehicle
+    expected_project_images: 2799
     expected_license: CC BY 4.0
-    source_url: https://universe.roboflow.com/roboflow-universe-projects/construction-site-safety/dataset/30
+    source_url: https://universe.roboflow.com/roboflow-universe-projects/construction-site-safety/dataset/27
+    provenance_note: >-
+      The Roboflow Universe v27 page historically reports 2801 images (2605/114/82),
+      while the actual YOLOv8 ZIP used by SafeGuard contains 2799 images
+      (2603/114/82). SafeGuard locks to the exact downloaded artifact and records
+      this two-image discrepancy instead of silently changing counts.
     accepted_class_names:
       person: [Person]
       helmet: [Hardhat]
       vest: [Safety Vest]
-      gloves: [Gloves]
       no_helmet: [NO-Hardhat]
 
   ultralytics:
-    display_name: Ultralytics Construction-PPE
+    display_name: Legacy Construction-PPE 1416-image mirror
     selected_release:
-      label: legacy-2025-v1
+      label: legacy-1416-image-mirror-v1
       expected_images: 1416
       expected_classes: 11
       expected_splits:
@@ -34,23 +53,25 @@ sources:
         val: 143
         test: 141
       expected_class_names:
-        - helmet
-        - gloves
-        - vest
-        - boots
-        - goggles
-        - none
         - Person
-        - no_helmet
-        - no_goggle
-        - no_gloves
+        - boots
+        - gloves
+        - goggles
+        - helmet
         - no_boots
-    source_url: https://docs.ultralytics.com/datasets/detect/construction-ppe
+        - no_gloves
+        - no_goggle
+        - no_helmet
+        - none
+        - vest
+    expected_license: CC BY 4.0
+    source_url: https://universe.roboflow.com/convert-i7psp/construction-ppe-unha4/dataset/1
     compatibility_note: >-
-      The public Ultralytics Construction-PPE archive changed in November 2026 to a
-      1000-image / 12-class release. SafeGuard is locked to the earlier 1416-image /
-      11-class release selected for this project. Class mapping is name-based, but a
-      release change must be deliberate and documented rather than silent.
+      SafeGuard is locked to the earlier 1416-image / 11-class Construction-PPE
+      release selected for this project. The current upstream Ultralytics dataset
+      was replaced by a different release, so this mirror is used to preserve the
+      original experimental design. Class mapping is name-based and release drift
+      must be deliberate and documented rather than silent.
 
 split_policy:
   strategy: deterministic_hash

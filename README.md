@@ -13,8 +13,9 @@ SafeGuard deliberately uses an **intersection**, not a union, of the two source 
 | `person` | `Person` | `Person` |
 | `helmet` | `Hardhat` | `helmet` |
 | `vest` | `Safety Vest` | `vest` |
-| `gloves` | `Gloves` | `gloves` |
 | `no_helmet` | `NO-Hardhat` | `no_helmet` |
+
+Roboflow Construction Site Safety v27 does **not** annotate gloves, so `gloves` is intentionally excluded from the strict V1 intersection even though the legacy Construction-PPE source contains that class.
 
 Source-only labels are excluded from V1. This avoids contradictory supervision, for example when one source contains visible boots or machinery that the other source never annotated.
 
@@ -104,7 +105,7 @@ For Roboflow, either export **Construction Site Safety** in YOLOv11 format into 
 
 ```powershell
 $env:ROBOFLOW_API_KEY="YOUR_KEY"
-python scripts\bootstrap_data.py --source roboflow --roboflow-version 30
+python scripts\bootstrap_data.py --source roboflow --roboflow-version 27
 ```
 
 The source audit intentionally fails/flags release differences rather than silently accepting a changed dataset.

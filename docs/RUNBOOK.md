@@ -38,7 +38,7 @@ Roboflow with API key:
 
 ```powershell
 $env:ROBOFLOW_API_KEY="..."
-python scripts\bootstrap_data.py --source roboflow --roboflow-version 30
+python scripts\bootstrap_data.py --source roboflow --roboflow-version 27
 ```
 
 Or export the public Construction Site Safety dataset in YOLOv11 format manually and extract it under `data/raw/roboflow`.
